@@ -1,0 +1,18 @@
+---
+- hosts: localhost
+  tasks:
+  - name: Create network
+    docker_network:
+      name: network_app
+      ipam_options:
+        subnet: '172.16.98.0/24'
+  - name: Run PHP container
+    docker_container:
+      name: 'php'
+      recreate: true
+      restart_policy: unless-stopped
+      image: 'php:7-fpm'
+      volumes:
+        - "php-app:/var/www/app"
+      networks:
+        - name: "network_app"
